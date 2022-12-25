@@ -7,7 +7,7 @@ const config = {
   devtool: false,
   output: {
     path: path.resolve(__dirname, "kaspersky-guide"),
-    filename: "bundle.jsx",
+    filename: "helper.jsx",
     chunkFormat: "commonjs",
     publicPath: path.resolve(__dirname, "kaspersky-guide") + "/",
   },
