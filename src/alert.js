@@ -6,7 +6,8 @@ import { closestFraction, multipliers, names } from "./constants"
 const order = ["h1", "h2", "h3", "h4", "teaser", "baseText"]
 
 let openDocument = app.activeDocument
-const { activePage } = openDocument.layoutWindows[0]
+const activePage = openDocument.pages.item(0)
+// const { activePage } = openDocument.layoutWindows[0]
 
 const autoFitProps = {
   // eslint-disable-next-line no-undef

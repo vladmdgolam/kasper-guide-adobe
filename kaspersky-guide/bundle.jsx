@@ -6,7 +6,7 @@
 /************************************************************************/
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	!function() {
-/******/ 		__webpack_require__.p = "/Users/vladmdgolam/work/ony/kasper-guide-adobe/dist/";
+/******/ 		__webpack_require__.p = "/Users/vladmdgolam/work/ony/kasper-guide-adobe/kaspersky-guide/";
 /******/ 	}();
 /******/ 	
 /************************************************************************/
@@ -72,7 +72,9 @@ function closestFraction(aspect) {
 
 var alert_order = ["h1", "h2", "h3", "h4", "teaser", "baseText"];
 var openDocument = app.activeDocument;
-var activePage = openDocument.layoutWindows[0].activePage;
+var activePage = openDocument.pages.item(0);
+// const { activePage } = openDocument.layoutWindows[0]
+
 var autoFitProps = {
   // eslint-disable-next-line no-undef
   autoSizingType: AutoSizingTypeEnum.HEIGHT_AND_WIDTH,

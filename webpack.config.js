@@ -6,10 +6,10 @@ const config = {
   entry: "./src/alert.js",
   devtool: false,
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
+    path: path.resolve(__dirname, "kaspersky-guide"),
+    filename: "bundle.jsx",
     chunkFormat: "commonjs",
-    publicPath: path.resolve(__dirname, "dist") + "/",
+    publicPath: path.resolve(__dirname, "kaspersky-guide") + "/",
   },
   optimization: {
     minimize: false,
