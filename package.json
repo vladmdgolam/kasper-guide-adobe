@@ -12,6 +12,7 @@
     "dev": "webpack --watch --mode production"
   },
   "dependencies": {
+    "clean-webpack-plugin": "^4.0.0",
     "nanoid": "^4.0.0",
     "raw-loader": "^4.0.2",
     "types-for-adobe": "^7.0.9",

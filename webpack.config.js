@@ -1,4 +1,5 @@
-// const webpack = require("webpack")
+/* eslint-disable no-undef */
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 const path = require("path")
 
 const config = {
@@ -31,6 +32,7 @@ const config = {
       },
     ],
   },
+  plugins: [new CleanWebpackPlugin()],
   externals: {
     photoshop: "commonjs2 photoshop",
     uxp: "commonjs2 uxp",
