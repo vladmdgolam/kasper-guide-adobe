@@ -13,9 +13,9 @@
 var __webpack_exports__ = {};
 
 ;// CONCATENATED MODULE: ./src/logo.svg
-var logo_namespaceObject = __webpack_require__.p + "43cb47563247861f64ee.svg";
+var logo_namespaceObject = __webpack_require__.p + "ba9019675a5ece8e54ed.svg";
 ;// CONCATENATED MODULE: ./src/k.svg
-var k_namespaceObject = __webpack_require__.p + "4798528304432a9134bd.svg";
+var k_namespaceObject = __webpack_require__.p + "b1dc11c7ea2ce3288c3b.svg";
 ;// CONCATENATED MODULE: ./src/constants.js
 var phi = 1.618;
 var multipliers = {
@@ -143,6 +143,7 @@ var runScript = function runScript() {
   var kProps = findKProps(scaleFactor);
   var kHeight = kProps[0];
   var kWidth = kProps[1];
+  var offset = kWidth * 1.5;
 
   /* ADDING TEXT */
   var addTexts = function addTexts() {
@@ -166,10 +167,8 @@ var runScript = function runScript() {
       return kFontSize;
     };
     var kFontSize = findkFontSize();
-    var offsetY = kWidth;
-    var offsetX = kWidth;
-
-    // order.forEach((key) => {
+    var offsetY = offset;
+    var offsetX = offset;
     for (var i = 0; i < alert_order.length; i++) {
       var key = alert_order[i];
       var fontSize = Math.round(multipliers[key] * kFontSize);
@@ -187,29 +186,27 @@ var runScript = function runScript() {
       textFrame.move([offsetX, offsetY]);
       offsetY = textFrame.geometricBounds[2] += kWidth / 2;
     }
-    // })
   };
-
   addTexts();
   var addGuides = function addGuides() {
     var pageHeight = pageBounds[2] - pageBounds[0];
     openDocument.guides.add(undefined, {
-      location: kWidth,
+      location: offset,
       // eslint-disable-next-line no-undef
       orientation: HorizontalOrVertical.VERTICAL
     });
     openDocument.guides.add(undefined, {
-      location: pageWidth - kWidth,
+      location: pageWidth - offset,
       // eslint-disable-next-line no-undef
       orientation: HorizontalOrVertical.VERTICAL
     });
     openDocument.guides.add(undefined, {
-      location: kWidth,
+      location: offset,
       // eslint-disable-next-line no-undef
       orientation: HorizontalOrVertical.HORIZONTAL
     });
     openDocument.guides.add(undefined, {
-      location: pageHeight - kWidth,
+      location: pageHeight - offset,
       // eslint-disable-next-line no-undef
       orientation: HorizontalOrVertical.HORIZONTAL
     });

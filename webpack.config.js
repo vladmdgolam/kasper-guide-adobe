@@ -22,10 +22,6 @@ const config = {
         use: "babel-loader",
         exclude: /node_modules/,
       },
-      // {
-      //   test: /\.svg/,
-      //   loader: "url-loader",
-      // },
       {
         test: /\.svg/,
         type: "asset/resource",

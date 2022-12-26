@@ -82,6 +82,8 @@ const runScript = () => {
   const kHeight = kProps[0]
   const kWidth = kProps[1]
 
+  const offset = kWidth * 1.5
+
   /* ADDING TEXT */
   const addTexts = () => {
     const kasperskyFontRegular = app.fonts.item("Kaspersky Sans Display")
@@ -108,10 +110,9 @@ const runScript = () => {
     }
     const kFontSize = findkFontSize()
 
-    let offsetY = kWidth
-    const offsetX = kWidth
+    let offsetY = offset
+    const offsetX = offset
 
-    // order.forEach((key) => {
     for (let i = 0; i < order.length; i++) {
       let key = order[i]
       const fontSize = Math.round(multipliers[key] * kFontSize)
@@ -135,7 +136,6 @@ const runScript = () => {
       textFrame.move([offsetX, offsetY])
       offsetY = textFrame.geometricBounds[2] += kWidth / 2
     }
-    // })
   }
 
   addTexts()
@@ -143,22 +143,22 @@ const runScript = () => {
   const addGuides = () => {
     const pageHeight = pageBounds[2] - pageBounds[0]
     openDocument.guides.add(undefined, {
-      location: kWidth,
+      location: offset,
       // eslint-disable-next-line no-undef
       orientation: HorizontalOrVertical.VERTICAL,
     })
     openDocument.guides.add(undefined, {
-      location: pageWidth - kWidth,
+      location: pageWidth - offset,
       // eslint-disable-next-line no-undef
       orientation: HorizontalOrVertical.VERTICAL,
     })
     openDocument.guides.add(undefined, {
-      location: kWidth,
+      location: offset,
       // eslint-disable-next-line no-undef
       orientation: HorizontalOrVertical.HORIZONTAL,
     })
     openDocument.guides.add(undefined, {
-      location: pageHeight - kWidth,
+      location: pageHeight - offset,
       // eslint-disable-next-line no-undef
       orientation: HorizontalOrVertical.HORIZONTAL,
     })
