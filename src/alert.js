@@ -6,8 +6,8 @@ import { closestFraction, multipliers, names } from "./constants"
 const order = ["h1", "h2", "h3", "h4", "teaser", "baseText"]
 
 let openDocument = app.activeDocument
-const activePage = openDocument.pages.item(0)
-// const { activePage } = openDocument.layoutWindows[0]
+// const activePage = openDocument.pages.item(0)
+const { activePage } = openDocument.layoutWindows[0]
 
 const autoFitProps = {
   // eslint-disable-next-line no-undef
@@ -142,22 +142,22 @@ const runScript = () => {
 
   const addGuides = () => {
     const pageHeight = pageBounds[2] - pageBounds[0]
-    openDocument.guides.add(undefined, {
+    activePage.guides.add(undefined, {
       location: offset,
       // eslint-disable-next-line no-undef
       orientation: HorizontalOrVertical.VERTICAL,
     })
-    openDocument.guides.add(undefined, {
+    activePage.guides.add(undefined, {
       location: pageWidth - offset,
       // eslint-disable-next-line no-undef
       orientation: HorizontalOrVertical.VERTICAL,
     })
-    openDocument.guides.add(undefined, {
+    activePage.guides.add(undefined, {
       location: offset,
       // eslint-disable-next-line no-undef
       orientation: HorizontalOrVertical.HORIZONTAL,
     })
-    openDocument.guides.add(undefined, {
+    activePage.guides.add(undefined, {
       location: pageHeight - offset,
       // eslint-disable-next-line no-undef
       orientation: HorizontalOrVertical.HORIZONTAL,
