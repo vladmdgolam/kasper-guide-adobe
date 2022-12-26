@@ -225,7 +225,7 @@ var start = function start() {
     minWidth: 1000
   });
   panel.staticTexts.add({
-    staticLabel: "Количество лого"
+    staticLabel: "Logo count"
   });
   var countBox = panel.realComboboxes.add({
     minimumValue: 1,

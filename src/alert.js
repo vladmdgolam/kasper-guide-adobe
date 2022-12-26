@@ -182,7 +182,7 @@ const start = () => {
   })
 
   panel.staticTexts.add({
-    staticLabel: "Количество лого",
+    staticLabel: "Logo count",
   })
 
   const countBox = panel.realComboboxes.add({
