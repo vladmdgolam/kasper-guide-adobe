@@ -118,12 +118,11 @@ var findKProps = function findKProps(scaleFactor) {
   kRect.remove();
   return kProps;
 };
-var runScript = function runScript() {
+var pageBounds = activePage.bounds;
+var pageWidth = pageBounds[3];
+var pageHeight = pageBounds[2];
+var runScript = function runScript(count) {
   var newLayer = openDocument.layers.add();
-  var pageBounds = activePage.bounds;
-  var pageWidth = pageBounds[3];
-  var pageHeight = pageBounds[2];
-  var count = closestFraction(pageWidth / pageHeight);
   var _placeSvg2 = placeSvg(logo_namespaceObject, newLayer),
     rect = _placeSvg2.rect;
   // finding scale
@@ -215,6 +214,30 @@ var runScript = function runScript() {
   // —————————————————————————————————————————————
 };
 
-runScript();
+var start = function start() {
+  var count = Number(closestFraction(pageWidth / pageHeight));
+  var dialog = app.dialogs.add({
+    name: "Kaspersky Guide",
+    canCancel: true
+  });
+  var column = dialog.dialogColumns.add();
+  var panel = column.borderPanels.add({
+    minWidth: 1000
+  });
+  panel.staticTexts.add({
+    staticLabel: "Количество лого"
+  });
+  var countBox = panel.realComboboxes.add({
+    minimumValue: 1,
+    maximumValue: 100,
+    smallNudge: 1,
+    editValue: count
+  });
+  if (dialog.show() === true) {
+    var finalCount = countBox.editValue;
+    runScript(finalCount);
+  }
+};
+start();
 /******/ })()
 ;

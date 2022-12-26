@@ -54,13 +54,12 @@ const findKProps = (scaleFactor) => {
   return kProps
 }
 
-const runScript = () => {
-  const newLayer = openDocument.layers.add()
-  const pageBounds = activePage.bounds
-  const pageWidth = pageBounds[3]
-  const pageHeight = pageBounds[2]
+const pageBounds = activePage.bounds
+const pageWidth = pageBounds[3]
+const pageHeight = pageBounds[2]
 
-  const count = closestFraction(pageWidth / pageHeight)
+const runScript = (count) => {
+  const newLayer = openDocument.layers.add()
 
   const { rect } = placeSvg(img, newLayer)
   // finding scale
@@ -169,4 +168,34 @@ const runScript = () => {
   // —————————————————————————————————————————————
 }
 
-runScript()
+const start = () => {
+  const count = Number(closestFraction(pageWidth / pageHeight))
+  const dialog = app.dialogs.add({
+    name: "Kaspersky Guide",
+    canCancel: true,
+  })
+
+  const column = dialog.dialogColumns.add()
+
+  const panel = column.borderPanels.add({
+    minWidth: 1000,
+  })
+
+  panel.staticTexts.add({
+    staticLabel: "Количество лого",
+  })
+
+  const countBox = panel.realComboboxes.add({
+    minimumValue: 1,
+    maximumValue: 100,
+    smallNudge: 1,
+    editValue: count,
+  })
+
+  if (dialog.show() === true) {
+    const finalCount = countBox.editValue
+    runScript(finalCount)
+  }
+}
+
+start()

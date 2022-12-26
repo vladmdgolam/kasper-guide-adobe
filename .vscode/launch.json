@@ -8,7 +8,7 @@
       "type": "extendscript-debug",
       "request": "launch",
       "name": "Launch Script in ExtendScript Engine",
-      "script": "${workspaceFolder}/dist/bundle.js",
+      "script": "${workspaceFolder}/kaspersky-guide/helper.jsx",
       "hostAppSpecifier": "indesign-18.064",
       "engineName": "main"
     },
