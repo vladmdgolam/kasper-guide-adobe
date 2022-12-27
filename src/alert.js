@@ -1,9 +1,18 @@
 /// <reference types="types-for-adobe/InDesign/2018"/>
 import img from "./logo.svg"
 import k from "./k.svg"
-import { closestFraction, multipliers, names } from "./constants"
+import {
+  closestFraction,
+  lineHeightCoeff,
+  multipliers,
+  names,
+} from "./constants"
 
 const order = ["h1", "h2", "h3", "h4", "teaser", "baseText"]
+
+const findLineHeight = (fontSize, baseHeight) => {
+  return baseHeight * Math.ceil(fontSize / baseHeight)
+}
 
 let openDocument = app.activeDocument
 // const activePage = openDocument.pages.item(0)
@@ -112,9 +121,12 @@ const runScript = (count) => {
     let offsetY = offset
     const offsetX = offset
 
+    const baseLeading = lineHeightCoeff * kFontSize * multipliers.baseText
+
     for (let i = 0; i < order.length; i++) {
       let key = order[i]
       const fontSize = Math.round(multipliers[key] * kFontSize)
+      const leading = findLineHeight(fontSize, baseLeading)
 
       const textFrame = activePage.textFrames.add()
       textFrame.name = key
@@ -126,6 +138,7 @@ const runScript = (count) => {
         appliedFont: kasperskyFont,
         pointSize: fontSize,
         noBreak: true,
+        leading
       }
       if (key === "teaser" || key === "baseText")
         paragraph.appliedFont = kasperskyFontRegular

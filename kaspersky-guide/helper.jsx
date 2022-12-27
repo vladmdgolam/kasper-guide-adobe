@@ -71,6 +71,9 @@ function closestFraction(aspect) {
 
 
 var alert_order = ["h1", "h2", "h3", "h4", "teaser", "baseText"];
+var findLineHeight = function findLineHeight(fontSize, baseHeight) {
+  return baseHeight * Math.ceil(fontSize / baseHeight);
+};
 var openDocument = app.activeDocument;
 // const activePage = openDocument.pages.item(0)
 var activePage = openDocument.layoutWindows[0].activePage;
@@ -167,9 +170,11 @@ var runScript = function runScript(count) {
     var kFontSize = findkFontSize();
     var offsetY = offset;
     var offsetX = offset;
+    var baseLeading = lineHeightCoeff * kFontSize * multipliers.baseText;
     for (var i = 0; i < alert_order.length; i++) {
       var key = alert_order[i];
       var fontSize = Math.round(multipliers[key] * kFontSize);
+      var leading = findLineHeight(fontSize, baseLeading);
       var textFrame = activePage.textFrames.add();
       textFrame.name = key;
       textFrame.contents = names[key];
@@ -177,7 +182,8 @@ var runScript = function runScript(count) {
       paragraph.properties = {
         appliedFont: kasperskyFont,
         pointSize: fontSize,
-        noBreak: true
+        noBreak: true,
+        leading: leading
       };
       if (key === "teaser" || key === "baseText") paragraph.appliedFont = kasperskyFontRegular;
       textFrame.textFramePreferences.properties = autoFitProps;
