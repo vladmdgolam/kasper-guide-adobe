@@ -133,18 +133,22 @@ var runScript = function runScript(count) {
   var imageWidth = imgBounds[3] - imgBounds[1];
   var scaleFactor = pageWidth / (imageWidth * count);
   resizeRect(rect, scaleFactor);
-  rect.move([0, pageHeight - rect.geometricBounds[2]]);
-  var rectWidth = rect.geometricBounds[3] - rect.geometricBounds[1];
-  for (var j = 1; j < count; j++) {
-    var _placeSvg3 = placeSvg(logo_namespaceObject, newLayer),
-      _rect = _placeSvg3.rect;
-    resizeRect(_rect, scaleFactor);
-    _rect.move([j * rectWidth, pageHeight - _rect.geometricBounds[2]]);
-  }
+
+  // calculate all useful constants
   var kProps = findKProps(scaleFactor);
   var kHeight = kProps[0];
   var kWidth = kProps[1];
   var offset = kWidth * 1.5;
+
+  // move logo to the bottom of the page
+  rect.move([offset, pageHeight - rect.geometricBounds[2] - offset]);
+
+  // const rectWidth = rect.geometricBounds[3] - rect.geometricBounds[1]
+  // for (let j = 1; j < count; j++) {
+  //   const { rect } = placeSvg(img, newLayer)
+  //   resizeRect(rect, scaleFactor)
+  //   rect.move([j * rectWidth, pageHeight - rect.geometricBounds[2]])
+  // }
 
   /* ADDING TEXT */
   var addTexts = function addTexts() {
@@ -170,7 +174,7 @@ var runScript = function runScript(count) {
     var kFontSize = findkFontSize();
     var offsetY = offset;
     var offsetX = offset;
-    var baseLeading = lineHeightCoeff * kFontSize * multipliers.baseText;
+    var baseLeading = Math.round(lineHeightCoeff * kFontSize * multipliers.baseText);
     for (var i = 0; i < alert_order.length; i++) {
       var key = alert_order[i];
       var fontSize = Math.round(multipliers[key] * kFontSize);

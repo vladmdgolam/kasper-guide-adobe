@@ -77,20 +77,22 @@ const runScript = (count) => {
   const scaleFactor = pageWidth / (imageWidth * count)
   resizeRect(rect, scaleFactor)
 
-  rect.move([0, pageHeight - rect.geometricBounds[2]])
-
-  const rectWidth = rect.geometricBounds[3] - rect.geometricBounds[1]
-  for (let j = 1; j < count; j++) {
-    const { rect } = placeSvg(img, newLayer)
-    resizeRect(rect, scaleFactor)
-    rect.move([j * rectWidth, pageHeight - rect.geometricBounds[2]])
-  }
-
+  // calculate all useful constants
   const kProps = findKProps(scaleFactor)
   const kHeight = kProps[0]
   const kWidth = kProps[1]
-
   const offset = kWidth * 1.5
+
+  // move logo to the bottom of the page
+  rect.move([offset, pageHeight - rect.geometricBounds[2] - offset])
+
+  // const rectWidth = rect.geometricBounds[3] - rect.geometricBounds[1]
+  // for (let j = 1; j < count; j++) {
+  //   const { rect } = placeSvg(img, newLayer)
+  //   resizeRect(rect, scaleFactor)
+  //   rect.move([j * rectWidth, pageHeight - rect.geometricBounds[2]])
+  // }
+
 
   /* ADDING TEXT */
   const addTexts = () => {
@@ -121,7 +123,7 @@ const runScript = (count) => {
     let offsetY = offset
     const offsetX = offset
 
-    const baseLeading = lineHeightCoeff * kFontSize * multipliers.baseText
+    const baseLeading = Math.round(lineHeightCoeff * kFontSize * multipliers.baseText)
 
     for (let i = 0; i < order.length; i++) {
       let key = order[i]
