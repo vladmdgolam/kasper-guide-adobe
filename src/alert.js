@@ -1,12 +1,12 @@
 /// <reference types="types-for-adobe/InDesign/2018"/>
-import img from "./logo.svg"
-import k from "./k.svg"
 import {
   closestFraction,
   lineHeightCoeff,
   multipliers,
   names,
 } from "./constants"
+import k from "./k.svg"
+import img from "./logo.svg"
 
 const order = ["h1", "h2", "h3", "h4", "teaser", "baseText"]
 
@@ -15,7 +15,6 @@ const findLineHeight = (fontSize, baseHeight) => {
 }
 
 let openDocument = app.activeDocument
-// const activePage = openDocument.pages.item(0)
 const { activePage } = openDocument.layoutWindows[0]
 
 const autoFitProps = {
@@ -93,7 +92,6 @@ const runScript = (count) => {
   //   rect.move([j * rectWidth, pageHeight - rect.geometricBounds[2]])
   // }
 
-
   /* ADDING TEXT */
   const addTexts = () => {
     const kasperskyFontRegular = app.fonts.item("Kaspersky Sans Display")
@@ -123,7 +121,9 @@ const runScript = (count) => {
     let offsetY = offset
     const offsetX = offset
 
-    const baseLeading = Math.round(lineHeightCoeff * kFontSize * multipliers.baseText)
+    const baseLeading = Math.round(
+      lineHeightCoeff * kFontSize * multipliers.baseText
+    )
 
     for (let i = 0; i < order.length; i++) {
       let key = order[i]
@@ -140,7 +140,7 @@ const runScript = (count) => {
         appliedFont: kasperskyFont,
         pointSize: fontSize,
         noBreak: true,
-        leading
+        leading,
       }
       if (key === "teaser" || key === "baseText")
         paragraph.appliedFont = kasperskyFontRegular
@@ -192,9 +192,7 @@ const start = () => {
 
   const column = dialog.dialogColumns.add()
 
-  const panel = column.borderPanels.add({
-    minWidth: 1000,
-  })
+  const panel = column.borderPanels.add()
 
   panel.staticTexts.add({
     staticLabel: "Logo count",

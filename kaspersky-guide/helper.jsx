@@ -6,16 +6,12 @@
 /************************************************************************/
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	!function() {
-/******/ 		__webpack_require__.p = "/Users/vladmdgolam/work/ony/kasper-guide-adobe/kaspersky-guide/";
+/******/ 		__webpack_require__.p = "/Users/vladmdgolam/work/ony/1. Kaspersky/kasper-guide-adobe/kaspersky-guide/";
 /******/ 	}();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 
-;// CONCATENATED MODULE: ./src/logo.svg
-var logo_namespaceObject = __webpack_require__.p + "ba9019675a5ece8e54ed.svg";
-;// CONCATENATED MODULE: ./src/k.svg
-var k_namespaceObject = __webpack_require__.p + "b1dc11c7ea2ce3288c3b.svg";
 ;// CONCATENATED MODULE: ./src/constants.js
 var phi = 1.618;
 var multipliers = {
@@ -65,6 +61,10 @@ function closestFraction(aspect) {
   var closest = fractions[closestIndex];
   return [closest[1]];
 }
+;// CONCATENATED MODULE: ./src/k.svg
+var k_namespaceObject = __webpack_require__.p + "d784ccf11141cc61515b.svg";
+;// CONCATENATED MODULE: ./src/logo.svg
+var logo_namespaceObject = __webpack_require__.p + "4272ee2ecc9a677a0a6f.svg";
 ;// CONCATENATED MODULE: ./src/alert.js
 /// <reference types="types-for-adobe/InDesign/2018"/>
 
@@ -75,7 +75,6 @@ var findLineHeight = function findLineHeight(fontSize, baseHeight) {
   return baseHeight * Math.ceil(fontSize / baseHeight);
 };
 var openDocument = app.activeDocument;
-// const activePage = openDocument.pages.item(0)
 var activePage = openDocument.layoutWindows[0].activePage;
 var autoFitProps = {
   // eslint-disable-next-line no-undef
@@ -231,9 +230,7 @@ var start = function start() {
     canCancel: true
   });
   var column = dialog.dialogColumns.add();
-  var panel = column.borderPanels.add({
-    minWidth: 1000
-  });
+  var panel = column.borderPanels.add();
   panel.staticTexts.add({
     staticLabel: "Logo count"
   });
