@@ -24,7 +24,7 @@ const config = {
       },
       {
         test: /\.svg/,
-        type: "asset/resource",
+        type: "asset/inline",
       },
     ],
   },
