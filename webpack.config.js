@@ -9,7 +9,8 @@ const config = {
     path: path.resolve(__dirname, "kaspersky-guide"),
     filename: "helper.jsx",
     chunkFormat: "commonjs",
-    publicPath: path.resolve(__dirname, "kaspersky-guide") + "/",
+    publicPath: "./",
+    // publicPath: path.resolve(__dirname, "kaspersky-guide") + "/",
   },
   optimization: {
     minimize: false,

@@ -6,7 +6,7 @@
 /************************************************************************/
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	!function() {
-/******/ 		__webpack_require__.p = "/Users/vladmdgolam/work/ony/1. Kaspersky/kasper-guide-adobe/kaspersky-guide/";
+/******/ 		__webpack_require__.p = app.activeScript.parent.fullName+"/";
 /******/ 	}();
 /******/ 	
 /************************************************************************/
