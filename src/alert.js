@@ -1,3 +1,4 @@
+import "./publicPath"
 /// <reference types="types-for-adobe/InDesign/2018"/>
 import {
   closestFraction,
@@ -40,8 +41,10 @@ const resizeRect = (rect, scaleFactor) => {
 
 /* adding logos */
 const placeSvg = (url) => {
+  // const path = app.activeScript.parent.fullName + "/"
   const rect = activePage.rectangles.add()
   const svg = rect.svgs.add()
+  // alert(url)
   const file = new File(url)
   svg.place(file)
   // eslint-disable-next-line no-undef

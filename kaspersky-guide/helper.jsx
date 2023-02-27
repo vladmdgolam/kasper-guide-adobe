@@ -1,17 +1,54 @@
 /******/ (function() { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The require scope
-/******/ 	var __webpack_require__ = {};
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 858:
+/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
+
+/* eslint-disable no-undef */
+__webpack_require__.p = app.activeScript.parent.fullName + "/";
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	!function() {
-/******/ 		__webpack_require__.p = app.activeScript.parent.fullName+"/";
+/******/ 		__webpack_require__.p = "";
 /******/ 	}();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+!function() {
+"use strict";
 
+// EXTERNAL MODULE: ./src/publicPath.js
+var publicPath = __webpack_require__(858);
 ;// CONCATENATED MODULE: ./src/constants.js
 var phi = 1.618;
 var multipliers = {
@@ -66,6 +103,7 @@ var k_namespaceObject = __webpack_require__.p + "d784ccf11141cc61515b.svg";
 ;// CONCATENATED MODULE: ./src/logo.svg
 var logo_namespaceObject = __webpack_require__.p + "4272ee2ecc9a677a0a6f.svg";
 ;// CONCATENATED MODULE: ./src/alert.js
+
 /// <reference types="types-for-adobe/InDesign/2018"/>
 
 
@@ -96,8 +134,10 @@ var resizeRect = function resizeRect(rect, scaleFactor) {
 
 /* adding logos */
 var placeSvg = function placeSvg(url) {
+  // const path = app.activeScript.parent.fullName + "/"
   var rect = activePage.rectangles.add();
   var svg = rect.svgs.add();
+  // alert(url)
   var file = new File(url);
   svg.place(file);
   // eslint-disable-next-line no-undef
@@ -246,5 +286,6 @@ var start = function start() {
   }
 };
 start();
+}();
 /******/ })()
 ;

@@ -9,9 +9,8 @@ const config = {
     path: path.resolve(__dirname, "kaspersky-guide"),
     filename: "helper.jsx",
     chunkFormat: "commonjs",
-    publicPath: "./",
-    // publicPath: path.resolve(__dirname, "kaspersky-guide") + "/",
   },
+
   optimization: {
     minimize: false,
   },
@@ -29,7 +28,9 @@ const config = {
       },
     ],
   },
-  plugins: [new CleanWebpackPlugin()],
+  plugins: [
+    new CleanWebpackPlugin(),
+  ],
   externals: {
     photoshop: "commonjs2 photoshop",
     uxp: "commonjs2 uxp",
