@@ -1,18 +1,19 @@
 import { data } from "./data.js"
+import { drawArtboard } from "./drawArtboard.js"
 /// <reference types="types-for-adobe/InDesign/2018"/>
 // load json
 const start = () => {
   // Assuming 'data' is already defined somewhere else in your script
 
-  var dialog = app.dialogs.add({ name: "Artboard Selector", canCancel: true })
-  var column = dialog.dialogColumns.add()
-  var dropdown = column.dropdowns.add()
+  let dialog = app.dialogs.add({ name: "Artboard Selector", canCancel: true })
+  let column = dialog.dialogColumns.add()
+  let dropdown = column.dropdowns.add()
 
-  var artboards = data.document.children[0]
-  var artboardNames = []
+  let artboards = data.document.children[0]
+  let artboardNames = []
 
-  for (var i = 0; i < artboards.children.length; i++) {
-    var artboardName = artboards.children[i].name
+  for (let i = 0; i < artboards.children.length; i++) {
+    let artboardName = artboards.children[i].name
     // Check if the artboard name starts with 'A' and does not contain 'Horizontal' or 'Vertical'
     if (
       artboardName.indexOf("A") === 0 &&
@@ -32,7 +33,29 @@ const start = () => {
   dropdown.selectedIndex = 0 // select the first item by default
 
   if (dialog.show() === true) {
-    var selectedArtboardName = dropdown.stringList[dropdown.selectedIndex]
+    let selectedArtboardName = dropdown.stringList[dropdown.selectedIndex]
+    const artboards = data.document.children[0]
+
+     let number
+
+     // Find the index of the selected artboard
+     for (let i = 0; i < artboards.children.length; i++) {
+       let name = artboards.children[i].name
+       if (
+         name.indexOf("A") === 0 &&
+         name.indexOf("Horizontal") === -1 &&
+         name.indexOf("Vertical") === -1
+       ) {
+         name = name + " Vertical"
+       }
+       if (name === selectedArtboardName) {
+         number = i
+         break
+       }
+     }
+
+    const artboardData = artboards.children[number]
+    drawArtboard(artboardData)
     dialog.destroy()
     // Use 'selectedArtboardName' here...
   } else {
