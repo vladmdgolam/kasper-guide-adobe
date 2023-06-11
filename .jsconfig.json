@@ -1,1 +1,1 @@
-{ "compilerOptions": { "module": "none", "noLib": true } }
+{ "compilerOptions": { "module": "none", "noLib": true }, "exclude": ["/src/data.js"] }

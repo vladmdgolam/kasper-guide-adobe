@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Launch Script in ExtendScript Engine",
       "script": "${workspaceFolder}/kaspersky-guide/helper.jsx",
-      "hostAppSpecifier": "indesign-18.064",
+      "hostAppSpecifier": "indesign-17",
       "engineName": "main"
     },
     {

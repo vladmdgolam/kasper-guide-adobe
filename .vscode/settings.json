@@ -1,4 +1,7 @@
 {
   "editor.formatOnSave": false,
-  "sort-imports.on-save": false
+  "sort-imports.on-save": false,
+  "editor.codeActionsOnSave": {
+    "**/data.js": false
+  }
 }
