@@ -55,7 +55,7 @@ const start = () => {
      }
 
     const artboardData = artboards.children[number]
-    drawArtboard(artboardData)
+    drawArtboard(artboardData, selectedArtboardName)
     dialog.destroy()
     // Use 'selectedArtboardName' here...
   } else {
