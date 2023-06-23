@@ -92,9 +92,10 @@ export const drawArtboard = (artboard, name = "") => {
 
   // draw elements
 
-  const kasperskyFontRegular = app.fonts.item("Kaspersky Sans Display")
-  //   const kasperskyFont = app.fonts.item("Kaspersky Sans Display	Medium")
+  const fontRegular = app.fonts.item("Kaspersky Sans Display")
+  const fontMedium = app.fonts.item("Kaspersky Sans Display	Medium")
 
+  
   let page = doc.pages[0]
 
   for (var i = 0; i < artboard.children.length; i++) {
@@ -107,7 +108,7 @@ export const drawArtboard = (artboard, name = "") => {
       let yInPoints = node.absoluteBoundingBox.y * toPoints
       let widthInPoints = node.absoluteBoundingBox.width * toPoints
       let heightInPoints = node.absoluteBoundingBox.height * toPoints
-
+      
       let docXInPoints = x * toPoints
       let docYInPoints = y * toPoints
 
@@ -124,12 +125,21 @@ export const drawArtboard = (artboard, name = "") => {
       ]
 
       // Set the font and font size
-      textFrame.texts[0].appliedFont = kasperskyFontRegular
-      textFrame.texts[0].pointSize = node.style.fontSize * toPoints
+      const font = node.style.fontWeight === 500 ? fontMedium : fontRegular
 
+      const text = textFrame.texts[0]
+
+      text.appliedFont = font
+      text.pointSize = node.style.fontSize * toPoints
+
+      const leading = node.style.lineHeightPx * toPoints
+      text.leading = leading
+
+      textFrame.parentStory.hyphenation = false; // Disable hyphenation
+      
       // Set the text
       textFrame.contents = node.characters
-
+      
       // textFrame.textFramePreferences.properties = autoFitProps
     }
   }
