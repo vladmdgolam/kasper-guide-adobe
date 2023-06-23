@@ -1,6 +1,6 @@
 /// <reference types="types-for-adobe/InDesign/2018"/>
 
-const toPx = 0.75
+const toPoints = 0.75
 
 const textnodetest = {
   id: "549:10556",
@@ -74,11 +74,18 @@ export const drawArtboard = (artboard, name = "") => {
   let widthInPoints = width / 1.3333
   let heightInPoints = height / 1.3333
 
-  let widthInPicas = widthInPoints / 12
-  let heightInPicas = heightInPoints / 12
+  // let widthInPicas = widthInPoints / 12
+  // let heightInPicas = heightInPoints / 12
 
-  doc.documentPreferences.pageWidth = widthInPicas
-  doc.documentPreferences.pageHeight = heightInPicas
+  // eslint-disable-next-line no-undef
+  doc.viewPreferences.horizontalMeasurementUnits = MeasurementUnits.points
+  // eslint-disable-next-line no-undef
+  doc.viewPreferences.verticalMeasurementUnits = MeasurementUnits.points
+  // eslint-disable-next-line no-undef
+  app.scriptPreferences.measurementUnit = MeasurementUnits.points
+
+  doc.documentPreferences.pageWidth = widthInPoints
+  doc.documentPreferences.pageHeight = heightInPoints
 
   // Set the frame's name
   doc.name = name
@@ -96,32 +103,29 @@ export const drawArtboard = (artboard, name = "") => {
     // let node = textnodetest
     // Your code here
     if (node.type === "TEXT") {
-      let xInPixels = node.absoluteBoundingBox.x * toPx
-      let yInPixels = node.absoluteBoundingBox.y * toPx
-      let widthInPixels = node.absoluteBoundingBox.width * toPx
-      let heightInPixels = node.absoluteBoundingBox.height * toPx
+      let xInPoints = node.absoluteBoundingBox.x * toPoints
+      let yInPoints = node.absoluteBoundingBox.y * toPoints
+      let widthInPoints = node.absoluteBoundingBox.width * toPoints
+      let heightInPoints = node.absoluteBoundingBox.height * toPoints
 
-      let docXInPixels = x * toPx
-      let docYInPixels = y * toPx
-
-      // eslint-disable-next-line no-undef
-      // app.scriptPreferences.measurementUnit = MeasurementUnits.points
+      let docXInPoints = x * toPoints
+      let docYInPoints = y * toPoints
 
       // Add a text frame and set its geometric bounds
       let textFrame = page.textFrames.add()
 
-      const startY = xInPixels - docXInPixels
-      const startX = yInPixels - docYInPixels
+      const startY = xInPoints - docXInPoints
+      const startX = yInPoints - docYInPoints
       textFrame.geometricBounds = [
-        startX / 12,
-        startY / 12,
-        (startX + heightInPixels) / 12,
-        (startY + widthInPixels) / 12,
+        startX,
+        startY,
+        startX + heightInPoints,
+        startY + widthInPoints,
       ]
 
       // Set the font and font size
       textFrame.texts[0].appliedFont = kasperskyFontRegular
-      textFrame.texts[0].pointSize = (node.style.fontSize * toPx) / 12
+      textFrame.texts[0].pointSize = node.style.fontSize * toPoints
 
       // Set the text
       textFrame.contents = node.characters
