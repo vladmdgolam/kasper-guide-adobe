@@ -2,7 +2,7 @@ import { toPoints, textAlignMap, fontMedium, fontRegular } from "./constants"
 
 export function createSvg(child, x, y, isLogo) {
     // eslint-disable-next-line no-undef
-    const currentScriptPath = $.fileName;
+    const currentScriptPath = $.fileName
     let core = currentScriptPath.substring(0, currentScriptPath.lastIndexOf("/")) + "/"
 
     const filePath = isLogo ? core + "logo.svg" : core + "slogan.svg"
@@ -49,13 +49,13 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
     // Add a text frame and set its geometric bounds
     let textFrame = page.textFrames.add()
 
-    const startY = xInPoints - docXInPoints
-    const startX = yInPoints - docYInPoints
+    let startX = xInPoints - docXInPoints
+    let startY = yInPoints - docYInPoints
     textFrame.geometricBounds = [
-        startX,
         startY,
-        startX + heightInPoints,
-        startY + widthInPoints,
+        startX,
+        startY + heightInPoints,
+        startX + widthInPoints,
     ]
 
     const font = node.style.fontWeight === 500 ? fontMedium : fontRegular
@@ -72,12 +72,46 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
 
     // Set the text
     textFrame.contents = node.characters
+    
+    const diff = 0
 
-    textFrame.textFramePreferences.autoSizingReferencePoint = textAlignMap[node.style.textAlignHorizontal][node.style.textAlignVertical]
-    // eslint-disable-next-line no-undef
-    textFrame.textFramePreferences.autoSizingType = AutoSizingTypeEnum.HEIGHT_ONLY
+    if (node.rotation && Math.abs(node.rotation) >= 0.01) {
+        textFrame.geometricBounds = [
+            startX,
+            startY,
+            startX + widthInPoints,
+            startY + heightInPoints,
+        ]
+        // eslint-disable-next-line no-undef
+        textFrame.fit(FitOptions.FRAME_TO_CONTENT)
 
-    // eslint-disable-next-line no-undef
-    textFrame.fit(FitOptions.FRAME_TO_CONTENT)
+        const frameBounds = textFrame.geometricBounds
+        const textWidth = frameBounds[3] - frameBounds[1]
+        const textHeight = frameBounds[0] - frameBounds[2]
+
+        textFrame.rotationAngle = -(node.rotation * 180) / Math.PI
+
+        startX += widthInPoints - diff
+
+        textFrame.geometricBounds = [
+            startY,
+            startX,
+            startY + textWidth,
+            startX + textHeight,
+        ]
+
+    } else {
+        // textFrame.move(["-" + diff, 0])
+
+        textFrame.textFramePreferences.autoSizingReferencePoint = textAlignMap[node.style.textAlignHorizontal][node.style.textAlignVertical]
+        // eslint-disable-next-line no-undef
+        textFrame.textFramePreferences.autoSizingType = AutoSizingTypeEnum.HEIGHT_ONLY
+
+        // eslint-disable-next-line no-undef
+        textFrame.fit(FitOptions.FRAME_TO_CONTENT)
+    }
+
+
+
     textFrame.name = node.name
 }
