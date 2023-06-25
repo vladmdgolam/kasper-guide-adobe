@@ -1,7 +1,7 @@
 /// <reference types="types-for-adobe/InDesign/2018"/>
 
 import { toPoints, textAlignMap } from "./constants"
-import { createSvg } from "./helpers"
+import { createSvg, createTextFrame } from "./helpers"
 
 
 const textnodetest = {
@@ -56,15 +56,6 @@ const textnodetest = {
   lineIndentations: [0],
 }
 
-const autoFitProps = {
-  // eslint-disable-next-line no-undef
-  autoSizingType: AutoSizingTypeEnum.HEIGHT_AND_WIDTH,
-  // eslint-disable-next-line no-undef
-  autoSizingReferencePoint: AutoSizingReferenceEnum.TOP_LEFT_POINT,
-  // eslint-disable-next-line no-undef
-  firstBaselineOffset: FirstBaseline.CAP_HEIGHT,
-}
-
 export const drawArtboard = (artboard, name = "") => {
   const { absoluteBoundingBox, layoutGrids } = artboard
   const { width, height, x, y } = absoluteBoundingBox
@@ -75,9 +66,6 @@ export const drawArtboard = (artboard, name = "") => {
 
   let widthInPoints = width / 1.3333
   let heightInPoints = height / 1.3333
-
-  // let widthInPicas = widthInPoints / 12
-  // let heightInPicas = heightInPoints / 12
 
   // eslint-disable-next-line no-undef
   doc.viewPreferences.horizontalMeasurementUnits = MeasurementUnits.points
@@ -93,12 +81,7 @@ export const drawArtboard = (artboard, name = "") => {
   doc.name = name
 
   // draw elements
-
-  const fontRegular = app.fonts.item("Kaspersky Sans Display")
-  const fontMedium = app.fonts.item("Kaspersky Sans Display	Medium")
-
-
-  let page = doc.pages[0]
+  const page = doc.pages[0]
 
   for (var i = 0; i < artboard.children.length; i++) {
     let node = artboard.children[i]
@@ -108,60 +91,9 @@ export const drawArtboard = (artboard, name = "") => {
     let docYInPoints = y * toPoints
 
     if (node.type === "TEXT") {
-      let xInPoints = node.absoluteBoundingBox.x * toPoints
-      let yInPoints = node.absoluteBoundingBox.y * toPoints
-      let widthInPoints = node.absoluteBoundingBox.width * toPoints
-      let heightInPoints = node.absoluteBoundingBox.height * toPoints
 
+      createTextFrame(node, docXInPoints, docYInPoints, page)
 
-      // Add a text frame and set its geometric bounds
-      let textFrame = page.textFrames.add()
-
-      const startY = xInPoints - docXInPoints
-      const startX = yInPoints - docYInPoints
-      textFrame.geometricBounds = [
-        startX,
-        startY,
-        startX + heightInPoints,
-        startY + widthInPoints,
-      ]
-
-      // Set the font and font size
-      const font = node.style.fontWeight === 500 ? fontMedium : fontRegular
-
-      const text = textFrame.texts[0]
-
-      text.appliedFont = font
-      text.pointSize = node.style.fontSize * toPoints
-
-      const leading = node.style.lineHeightPx * toPoints
-      text.leading = leading
-
-      textFrame.parentStory.hyphenation = false // Disable hyphenation
-
-      // Set the text
-      textFrame.contents = node.characters
-
-      // let originalTransformRefPoint = app.layoutWindows[0].transformReferencePoint
-      // if (node.style.textAlignHorizontal && node.style.textAlignVertical) {
-      //   var anchorPoint = textAlignMap[node.style.textAlignHorizontal][node.style.textAlignVertical]
-      //   // Set the reference point
-      //   app.layoutWindows[0].transformReferencePoint = anchorPoint
-      // }
-
-      textFrame.textFramePreferences.autoSizingReferencePoint = textAlignMap[node.style.textAlignHorizontal][node.style.textAlignVertical]
-      // eslint-disable-next-line no-undef
-       textFrame.textFramePreferences.autoSizingType = AutoSizingTypeEnum.HEIGHT_ONLY;
-
-      // eslint-disable-next-line no-undef
-      // textFrame.fit(FitOptions.CONTENT_TO_FRAME)
-      // eslint-disable-next-line no-undef
-      textFrame.fit(FitOptions.FRAME_TO_CONTENT)
-      textFrame.name = node.name
-
-      // app.layoutWindows[0].transformReferencePoint = originalTransformRefPoint
-
-      // textFrame.textFramePreferences.properties = autoFitProps
     } else if (node.name.match(/^logo /)) {
       // go through all children of artboard
 

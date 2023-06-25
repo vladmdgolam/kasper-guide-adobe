@@ -1,4 +1,4 @@
-import { toPoints } from "./constants"
+import { toPoints, textAlignMap, fontMedium, fontRegular } from "./constants"
 
 export function createSvg(child, x, y, isLogo) {
     // eslint-disable-next-line no-undef
@@ -34,30 +34,50 @@ export function createSvg(child, x, y, isLogo) {
     // eslint-disable-next-line no-undef
     frame.fit(FitOptions.FRAME_TO_CONTENT)
     frame.name = child.name
+
+    frame.strokeWeight = 0
 }
 
 
-// export const createSvg = (
-//     child: VectorNode,
-//     x: number,
-//     y: number,
-//     isLogo: boolean,
-// ) => {
-//     const svg = isLogo ? logo : slogan
-//     const logoNode = figma.createNodeFromSvg(svg)
-//     newArtboard.appendChild(logoNode)
-//     const { absoluteBoundingBox } = child as VNode
-//     if (isLogo) {
-//         let logoSvg = figma.ungroup(logoNode)[0] as VectorNode
-//         logoSvg.resize(absoluteBoundingBox!.width, absoluteBoundingBox!.height)
-//         logoSvg.x = absoluteBoundingBox!.x - x
-//         logoSvg.y = absoluteBoundingBox!.y - y
-//         logoSvg.name = child.name
-//     } else {
-//         let sloganSvg = figma.flatten([logoNode], newArtboard)
-//         sloganSvg.resize(absoluteBoundingBox!.width, absoluteBoundingBox!.height)
-//         sloganSvg.x = absoluteBoundingBox!.x - x
-//         sloganSvg.y = absoluteBoundingBox!.y - y
-//         sloganSvg.name = child.name
-//     }
-// }
+
+export function createTextFrame(node, docXInPoints, docYInPoints, page) {
+    let xInPoints = node.absoluteBoundingBox.x * toPoints
+    let yInPoints = node.absoluteBoundingBox.y * toPoints
+    let widthInPoints = node.absoluteBoundingBox.width * toPoints
+    let heightInPoints = node.absoluteBoundingBox.height * toPoints
+
+    // Add a text frame and set its geometric bounds
+    let textFrame = page.textFrames.add()
+
+    const startY = xInPoints - docXInPoints
+    const startX = yInPoints - docYInPoints
+    textFrame.geometricBounds = [
+        startX,
+        startY,
+        startX + heightInPoints,
+        startY + widthInPoints,
+    ]
+
+    const font = node.style.fontWeight === 500 ? fontMedium : fontRegular
+
+    const text = textFrame.texts[0]
+
+    text.appliedFont = font
+    text.pointSize = node.style.fontSize * toPoints
+
+    const leading = node.style.lineHeightPx * toPoints
+    text.leading = leading
+
+    textFrame.parentStory.hyphenation = false // Disable hyphenation
+
+    // Set the text
+    textFrame.contents = node.characters
+
+    textFrame.textFramePreferences.autoSizingReferencePoint = textAlignMap[node.style.textAlignHorizontal][node.style.textAlignVertical]
+    // eslint-disable-next-line no-undef
+    textFrame.textFramePreferences.autoSizingType = AutoSizingTypeEnum.HEIGHT_ONLY
+
+    // eslint-disable-next-line no-undef
+    textFrame.fit(FitOptions.FRAME_TO_CONTENT)
+    textFrame.name = node.name
+}

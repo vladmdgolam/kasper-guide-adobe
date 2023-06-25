@@ -82,3 +82,15 @@ export const textAlignMap = {
     "BOTTOM": AutoSizingReferenceEnum.BOTTOM_RIGHT_POINT,
   },
 }
+
+export const fontRegular = app.fonts.item("Kaspersky Sans Display")
+export const fontMedium = app.fonts.item("Kaspersky Sans Display	Medium")
+
+export const autoFitProps = {
+  // eslint-disable-next-line no-undef
+  autoSizingType: AutoSizingTypeEnum.HEIGHT_AND_WIDTH,
+  // eslint-disable-next-line no-undef
+  autoSizingReferencePoint: AutoSizingReferenceEnum.TOP_LEFT_POINT,
+  // eslint-disable-next-line no-undef
+  firstBaselineOffset: FirstBaseline.CAP_HEIGHT,
+}
