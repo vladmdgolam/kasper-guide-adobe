@@ -2,10 +2,12 @@
   "editor.formatOnSave": false,
   "sort-imports.on-save": false,
   "editor.codeActionsOnSave": {
+    "source.removeUnusedImports": false,
     "**/data.js": false
   },
   "files.watcherExclude": {
     "data.js": true,
     "helper.jsx": true
-  }
+  },
+  "explorer.excludeGitIgnore": true
 }

@@ -1,4 +1,4 @@
-import { toPoints } from "./drawArtboard"
+import { toPoints } from "./constants"
 
 export function createSvg(child, x, y, isLogo) {
     // eslint-disable-next-line no-undef

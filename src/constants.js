@@ -62,3 +62,23 @@ export function closestFraction(aspect) {
   const closest = fractions[closestIndex]
   return [closest[1]]
 }
+
+export const toPoints = 0.75
+
+export const textAlignMap = {
+  "LEFT": {
+    "TOP": AutoSizingReferenceEnum.TOP_LEFT_POINT,
+    "CENTER": AutoSizingReferenceEnum.LEFT_CENTER_POINT,
+    "BOTTOM": AutoSizingReferenceEnum.BOTTOM_LEFT_POINT,
+  },
+  "CENTER": {
+    "TOP": AutoSizingReferenceEnum.TOP_CENTER_POINT,
+    "CENTER": AutoSizingReferenceEnum.CENTER_POINT,
+    "BOTTOM": AutoSizingReferenceEnum.BOTTOM_CENTER_POINT,
+  },
+  "RIGHT": {
+    "TOP": AutoSizingReferenceEnum.TOP_RIGHT_POINT,
+    "CENTER": AutoSizingReferenceEnum.RIGHT_CENTER_POINT,
+    "BOTTOM": AutoSizingReferenceEnum.BOTTOM_RIGHT_POINT,
+  },
+}

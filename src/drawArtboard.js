@@ -1,8 +1,8 @@
 /// <reference types="types-for-adobe/InDesign/2018"/>
 
+import { toPoints, textAlignMap } from "./constants"
 import { createSvg } from "./helpers"
 
-export const toPoints = 0.75
 
 const textnodetest = {
   id: "549:10556",
@@ -141,6 +141,25 @@ export const drawArtboard = (artboard, name = "") => {
 
       // Set the text
       textFrame.contents = node.characters
+
+      // let originalTransformRefPoint = app.layoutWindows[0].transformReferencePoint
+      // if (node.style.textAlignHorizontal && node.style.textAlignVertical) {
+      //   var anchorPoint = textAlignMap[node.style.textAlignHorizontal][node.style.textAlignVertical]
+      //   // Set the reference point
+      //   app.layoutWindows[0].transformReferencePoint = anchorPoint
+      // }
+
+      textFrame.textFramePreferences.autoSizingReferencePoint = textAlignMap[node.style.textAlignHorizontal][node.style.textAlignVertical]
+      // eslint-disable-next-line no-undef
+       textFrame.textFramePreferences.autoSizingType = AutoSizingTypeEnum.HEIGHT_ONLY;
+
+      // eslint-disable-next-line no-undef
+      // textFrame.fit(FitOptions.CONTENT_TO_FRAME)
+      // eslint-disable-next-line no-undef
+      textFrame.fit(FitOptions.FRAME_TO_CONTENT)
+      textFrame.name = node.name
+
+      // app.layoutWindows[0].transformReferencePoint = originalTransformRefPoint
 
       // textFrame.textFramePreferences.properties = autoFitProps
     } else if (node.name.match(/^logo /)) {
