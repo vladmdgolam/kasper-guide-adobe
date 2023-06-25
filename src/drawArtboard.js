@@ -1,6 +1,8 @@
 /// <reference types="types-for-adobe/InDesign/2018"/>
 
-const toPoints = 0.75
+import { createSvg } from "./helpers"
+
+export const toPoints = 0.75
 
 const textnodetest = {
   id: "549:10556",
@@ -95,22 +97,22 @@ export const drawArtboard = (artboard, name = "") => {
   const fontRegular = app.fonts.item("Kaspersky Sans Display")
   const fontMedium = app.fonts.item("Kaspersky Sans Display	Medium")
 
-  
+
   let page = doc.pages[0]
 
   for (var i = 0; i < artboard.children.length; i++) {
-    // for (var i = 0; i < 1; i++) {
     let node = artboard.children[i]
     // let node = textnodetest
     // Your code here
+    let docXInPoints = x * toPoints
+    let docYInPoints = y * toPoints
+
     if (node.type === "TEXT") {
       let xInPoints = node.absoluteBoundingBox.x * toPoints
       let yInPoints = node.absoluteBoundingBox.y * toPoints
       let widthInPoints = node.absoluteBoundingBox.width * toPoints
       let heightInPoints = node.absoluteBoundingBox.height * toPoints
-      
-      let docXInPoints = x * toPoints
-      let docYInPoints = y * toPoints
+
 
       // Add a text frame and set its geometric bounds
       let textFrame = page.textFrames.add()
@@ -135,12 +137,27 @@ export const drawArtboard = (artboard, name = "") => {
       const leading = node.style.lineHeightPx * toPoints
       text.leading = leading
 
-      textFrame.parentStory.hyphenation = false; // Disable hyphenation
-      
+      textFrame.parentStory.hyphenation = false // Disable hyphenation
+
       // Set the text
       textFrame.contents = node.characters
-      
+
       // textFrame.textFramePreferences.properties = autoFitProps
+    } else if (node.name.match(/^logo /)) {
+      // go through all children of artboard
+
+      if (node.type === "GROUP") {
+        for (var j = 0; j < node.children.length; j++) {
+          var child = node.children[j]
+          if (child.name === "logo") {
+            // createSvg(newArtboard, child as VectorNode, x, y)
+            createSvg(child, docXInPoints, docYInPoints, true)
+          } else {
+            createSvg(child, docXInPoints, docYInPoints, false)
+            // createSvg(newArtboard, child as VectorNode, x, y, slogan)
+          }
+        }
+      }
     }
   }
 }

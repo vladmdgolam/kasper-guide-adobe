@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const CopyPlugin = require("copy-webpack-plugin")
 const path = require("path")
 
 const config = {
@@ -30,6 +31,11 @@ const config = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new CopyPlugin({
+      patterns: [
+        { from: '**/*.svg', to: '[name][ext]', noErrorOnMissing: true, context: 'src/' },
+      ],
+    }),
   ],
   externals: {
     photoshop: "commonjs2 photoshop",
