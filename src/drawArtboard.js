@@ -1,7 +1,7 @@
 /// <reference types="types-for-adobe/InDesign/2018"/>
 
 import { toPoints, textAlignMap } from "./constants"
-import { createSvg, createTextFrame } from "./helpers"
+import { createLineNodes, createSvg, createTextFrame } from "./helpers"
 
 
 const textnodetest = {
@@ -90,7 +90,9 @@ export const drawArtboard = (artboard, name = "") => {
     let docXInPoints = x * toPoints
     let docYInPoints = y * toPoints
 
-    if (node.type === "TEXT") {
+    if (node.name.match(/^\d{2}pt$/) && !name.match(/^Banner/)) {
+      createLineNodes(node, docXInPoints, docYInPoints, page)
+    } else if (node.type === "TEXT") {
 
       createTextFrame(node, docXInPoints, docYInPoints, page)
 

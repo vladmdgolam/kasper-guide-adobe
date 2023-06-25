@@ -65,6 +65,11 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
     text.appliedFont = font
     text.pointSize = node.style.fontSize * toPoints
 
+    let diff = 0
+    if (node.layoutVersion === 0) {
+        // diff = calcDiff(text, node.style.lineHeightPx)
+    }
+
     const leading = node.style.lineHeightPx * toPoints
     text.leading = leading
 
@@ -72,8 +77,8 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
 
     // Set the text
     textFrame.contents = node.characters
-    
-    const diff = 0
+
+
 
     if (node.rotation && Math.abs(node.rotation) >= 0.01) {
         textFrame.geometricBounds = [
@@ -114,4 +119,102 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
 
 
     textFrame.name = node.name
+}
+
+export function calcDiff(textFrame, lineHeightPx) {
+    // Convert line height from pixels to points
+    const lineHeightInPoints = lineHeightPx * toPoints
+
+    // Clone text frame
+    const clone = textFrame.duplicate()
+
+    // Capture Y position before lineHeight change
+    const yBefore = clone.geometricBounds[0]
+
+    // Set lineHeight (leading) and capture Y position after lineHeight change
+    clone.texts[0].leading = lineHeightInPoints
+    const yAfter = clone.geometricBounds[0]
+
+    // Calculate difference
+    const diff = yAfter - yBefore
+
+    // Remove cloned text frame
+    clone.remove()
+
+    return diff
+}
+
+export function createLineNodes(node, docXInPoints, docYInPoints, page) {
+    let lines = node
+
+    let linesArr = []
+
+    // For each child node, create Line
+    for (var j = 0; j < node.children.length; j++) {
+        const child = node.children[j]
+        const { absoluteBoundingBox, strokeWeight, strokes } = child
+
+        // If strokes is undefined, skip
+        if (!strokes || !strokes[0]) return
+
+        let xInPoints = child.absoluteBoundingBox.x * toPoints
+        let yInPoints = child.absoluteBoundingBox.y * toPoints
+
+        const startX = xInPoints - docXInPoints
+        const startY = yInPoints - docYInPoints
+
+        let colorObj = {
+            "r": 0,
+            "g": 0.8941176533699036,
+            "b": 0.7960784435272217,
+            "a": 1
+        }
+
+        // InDesign's color value range is 0-255, so we scale up the values
+        let red = Math.round(colorObj.r * 255)
+        let green = Math.round(colorObj.g * 255)
+        let blue = Math.round(colorObj.b * 255)
+
+        let colorName = "MyColor"
+
+        // Check if color already exists
+        let existingColor = app.activeDocument.colors.itemByName(colorName)
+
+        if (!existingColor.isValid) {
+            // Create a new color
+            var newColor = app.activeDocument.colors.add({
+                name: "MyColor",
+                model: ColorModel.PROCESS,
+                space: ColorSpace.RGB,
+                colorValue: [red, green, blue]  // r, g, b are between 0 and 255
+            });
+
+            // Now you can apply newColor to your objects
+            existingColor = newColor
+        }
+
+        const line = page.graphicLines.add({
+            strokeWeight: strokeWeight,
+            geometricBounds: [
+                startY,
+                startX,
+                startY,
+                startX + absoluteBoundingBox.width * toPoints
+            ],
+            strokeColor: existingColor, // Assuming that the color exists in the document's colors
+        })
+
+        linesArr.push(line)
+    }
+
+    // Group all lines
+    const group = page.groups.add(linesArr)
+    group.name = node.name
+
+    // Make group.visible = true if starts with 12
+    if (node.name.match(/^12pt$/)) {
+        group.visible = true
+    } else {
+        group.visible = false
+    }
 }
