@@ -67,24 +67,35 @@ export const toPoints = 0.75
 
 export const textAlignMap = {
   "LEFT": {
+    // eslint-disable-next-line no-undef
     "TOP": AutoSizingReferenceEnum.TOP_LEFT_POINT,
+    // eslint-disable-next-line no-undef
     "CENTER": AutoSizingReferenceEnum.LEFT_CENTER_POINT,
+    // eslint-disable-next-line no-undef
     "BOTTOM": AutoSizingReferenceEnum.BOTTOM_LEFT_POINT,
   },
   "CENTER": {
+    // eslint-disable-next-line no-undef
     "TOP": AutoSizingReferenceEnum.TOP_CENTER_POINT,
+    // eslint-disable-next-line no-undef
     "CENTER": AutoSizingReferenceEnum.CENTER_POINT,
+    // eslint-disable-next-line no-undef
     "BOTTOM": AutoSizingReferenceEnum.BOTTOM_CENTER_POINT,
   },
   "RIGHT": {
+    // eslint-disable-next-line no-undef
     "TOP": AutoSizingReferenceEnum.TOP_RIGHT_POINT,
+    // eslint-disable-next-line no-undef
     "CENTER": AutoSizingReferenceEnum.RIGHT_CENTER_POINT,
+    // eslint-disable-next-line no-undef
     "BOTTOM": AutoSizingReferenceEnum.BOTTOM_RIGHT_POINT,
   },
 }
 
 export const fontRegular = app.fonts.item("Kaspersky Sans Display")
 export const fontMedium = app.fonts.item("Kaspersky Sans Display	Medium")
+export const fontMono = app.fonts.item("Kaspersky Sans Mono")
+
 
 export const autoFitProps = {
   // eslint-disable-next-line no-undef

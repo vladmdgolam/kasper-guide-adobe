@@ -1,4 +1,4 @@
-import { toPoints, textAlignMap, fontMedium, fontRegular } from "./constants"
+import { toPoints, textAlignMap, fontMedium, fontRegular, fontMono } from "./constants"
 
 export function createSvg(child, x, y, isLogo) {
     // eslint-disable-next-line no-undef
@@ -38,6 +38,52 @@ export function createSvg(child, x, y, isLogo) {
     frame.strokeWeight = 0
 }
 
+function calcLeadingFix(textFrameOG, textOG, page) {
+
+    const { geometricBounds } = textFrameOG
+    const { pointSize: fontSize, leading } = textOG
+    const font = textOG.appliedFont
+
+    // Create a new text frame
+    let textFrame = page.textFrames.add()
+    textFrame.geometricBounds = geometricBounds
+
+    // Set the font, leading, and font size
+    let text = textFrame.texts[0]
+    text.appliedFont = font
+    text.leading = leading
+    text.pointSize = fontSize
+
+    // Set its contents to 'T'
+    textFrame.contents = 'T'
+
+    // Store the original top Y position
+    const originalY = textFrame.geometricBounds[0]
+
+    // Outline the text frame. This creates a new group item and removes the original text frame.
+    const arr = textFrame.createOutlines() // Pass false to prevent removing the original item
+    const outlinedGroup = arr[0]
+
+    // Calculate the height of the outlined text
+    const capHeight = outlinedGroup.geometricBounds[2] - outlinedGroup.geometricBounds[0]
+
+    // Calculate the new top Y position
+    const newY = outlinedGroup.geometricBounds[0]
+
+    // Calculate the difference between the original and new Y positions
+    const diffY = newY - originalY
+
+    // Remove the temporary text frame and outlined group
+    // textFrame.remove()
+    outlinedGroup.remove()
+
+    // Return the calculated values
+    return {
+        capHeight,
+        diffY
+    }
+}
+
 
 
 export function createTextFrame(node, docXInPoints, docYInPoints, page) {
@@ -58,27 +104,47 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
         startX + widthInPoints,
     ]
 
-    const font = node.style.fontWeight === 500 ? fontMedium : fontRegular
+    let font
+    if (node.style.fontFamily === "Kaspersky Sans Mono") {
+        font = fontMono
+    } else {
+        font = node.style.fontWeight === 500 ? fontMedium : fontRegular
+    }
 
     const text = textFrame.texts[0]
 
     text.appliedFont = font
     text.pointSize = node.style.fontSize * toPoints
 
-    let diff = 0
-    if (node.layoutVersion === 0) {
-        // diff = calcDiff(text, node.style.lineHeightPx)
-    }
-
     const leading = node.style.lineHeightPx * toPoints
     text.leading = leading
+
+    let diff = 0
+    // if (node.layoutVersion === 0) {
+    //     // diff = calcDiff(text, node.style.lineHeightPx, node)
+    // }
+
+    let { capHeight, diffY } = calcLeadingFix(textFrame, text, page)
+
+    let leadingDiff
+    if (node.layoutVersion === 0) {
+        leadingDiff = (leading - capHeight) / 2
+    } else {
+        leadingDiff = (leading - capHeight) / 2
+        leadingDiff -= diffY
+    }
+    startY += leadingDiff
 
     textFrame.parentStory.hyphenation = false // Disable hyphenation
 
     // Set the text
-    textFrame.contents = node.characters
-
-
+    
+    let textContents = node.characters
+    if (textContents.indexOf("Website") !== -1) {
+        textContents = textContents.replace("(", "\r")
+    }
+    textFrame.contents = textContents
+    
 
     if (node.rotation && Math.abs(node.rotation) >= 0.01) {
         textFrame.geometricBounds = [
@@ -106,7 +172,12 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
         ]
 
     } else {
-        // textFrame.move(["-" + diff, 0])
+        textFrame.geometricBounds = [
+            startY, //+ diff
+            startX,
+            startY + heightInPoints, //+ diff
+            startX + widthInPoints,
+        ]
 
         textFrame.textFramePreferences.autoSizingReferencePoint = textAlignMap[node.style.textAlignHorizontal][node.style.textAlignVertical]
         // eslint-disable-next-line no-undef
@@ -121,7 +192,14 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
     textFrame.name = node.name
 }
 
-export function calcDiff(textFrame, lineHeightPx) {
+export function calcDiff(textFrame, lineHeightPx, node) {
+    // textFrame.textFramePreferences.autoSizingReferencePoint = textAlignMap[node.style.textAlignHorizontal][node.style.textAlignVertical]
+    // eslint-disable-next-line no-undef
+    textFrame.textFramePreferences.autoSizingType = AutoSizingTypeEnum.HEIGHT_ONLY
+
+    // eslint-disable-next-line no-undef
+    textFrame.fit(FitOptions.FRAME_TO_CONTENT)
+
     // Convert line height from pixels to points
     const lineHeightInPoints = lineHeightPx * toPoints
 
@@ -132,7 +210,11 @@ export function calcDiff(textFrame, lineHeightPx) {
     const yBefore = clone.geometricBounds[0]
 
     // Set lineHeight (leading) and capture Y position after lineHeight change
+
     clone.texts[0].leading = lineHeightInPoints
+    // eslint-disable-next-line no-undef
+    clone.fit(FitOptions.FRAME_TO_CONTENT)
+
     const yAfter = clone.geometricBounds[0]
 
     // Calculate difference
@@ -145,7 +227,6 @@ export function calcDiff(textFrame, lineHeightPx) {
 }
 
 export function createLineNodes(node, docXInPoints, docYInPoints, page) {
-    let lines = node
 
     let linesArr = []
 
@@ -187,7 +268,7 @@ export function createLineNodes(node, docXInPoints, docYInPoints, page) {
                 model: ColorModel.PROCESS,
                 space: ColorSpace.RGB,
                 colorValue: [red, green, blue]  // r, g, b are between 0 and 255
-            });
+            })
 
             // Now you can apply newColor to your objects
             existingColor = newColor
