@@ -148,7 +148,11 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
         leadingDiff = (leading - capHeight) / 2
         leadingDiff -= diffY
     }
-    startY += leadingDiff
+    if(node.style.textAlignVertical === "BOTTOM") {
+        startY -= leadingDiff
+    } else {
+        startY += leadingDiff
+    }
 
     textFrame.parentStory.hyphenation = false // Disable hyphenation
 
@@ -161,7 +165,6 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
 
     setTextAlignment(textFrame, node.style.textAlignHorizontal)
     
-
     if (node.rotation && Math.abs(node.rotation) >= 0.01) {
         textFrame.geometricBounds = [
             startX,

@@ -38,7 +38,7 @@ export const drawArtboard = (artboard, name = "") => {
     let docYInPoints = y * toPoints
 
     if (node.name.match(/^\d{2}pt$/) && !name.match(/^Banner/)) {
-      // createLineNodes(node, docXInPoints, docYInPoints, page)
+      createLineNodes(node, docXInPoints, docYInPoints, page)
     } else if (node.type === "TEXT") {
 
       createTextFrame(node, docXInPoints, docYInPoints, page)
@@ -46,16 +46,16 @@ export const drawArtboard = (artboard, name = "") => {
     } else if (node.name.match(/^logo /)) {
       // go through all children of artboard
 
-      // if (node.type === "GROUP") {
-      //   for (var j = 0; j < node.children.length; j++) {
-      //     var child = node.children[j]
-      //     if (child.name === "logo") {
-      //       createSvg(child, docXInPoints, docYInPoints, true)
-      //     } else {
-      //       createSvg(child, docXInPoints, docYInPoints, false)
-      //     }
-      //   }
-      // }
+      if (node.type === "GROUP") {
+        for (var j = 0; j < node.children.length; j++) {
+          var child = node.children[j]
+          if (child.name === "logo") {
+            createSvg(child, docXInPoints, docYInPoints, true)
+          } else {
+            createSvg(child, docXInPoints, docYInPoints, false)
+          }
+        }
+      }
     }
   }
 }
