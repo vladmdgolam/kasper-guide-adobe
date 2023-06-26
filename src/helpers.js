@@ -84,7 +84,22 @@ function calcLeadingFix(textFrameOG, textOG, page) {
     }
 }
 
+function setTextAlignment(textFrame, textAlignHorizontal) {
+    // Map the provided string values to InDesign's Justification
+    const horizontalAlignments = {
+        // eslint-disable-next-line no-undef
+        "LEFT": Justification.LEFT_ALIGN,
+        // eslint-disable-next-line no-undef
+        "CENTER": Justification.CENTER_ALIGN,
+        // eslint-disable-next-line no-undef
+        "RIGHT": Justification.RIGHT_ALIGN
+    }
 
+    // Apply the alignments to each paragraph in the text frame
+    for (var i = 0; i < textFrame.parentStory.paragraphs.length; i++) {
+        textFrame.parentStory.paragraphs[i].justification = horizontalAlignments[textAlignHorizontal.toUpperCase()]
+    }
+}
 
 export function createTextFrame(node, docXInPoints, docYInPoints, page) {
     let xInPoints = node.absoluteBoundingBox.x * toPoints
@@ -138,12 +153,13 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
     textFrame.parentStory.hyphenation = false // Disable hyphenation
 
     // Set the text
-    
     let textContents = node.characters
     if (textContents.indexOf("Website") !== -1) {
         textContents = textContents.replace("(", "\r")
     }
     textFrame.contents = textContents
+
+    setTextAlignment(textFrame, node.style.textAlignHorizontal)
     
 
     if (node.rotation && Math.abs(node.rotation) >= 0.01) {
