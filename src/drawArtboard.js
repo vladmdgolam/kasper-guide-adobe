@@ -30,6 +30,12 @@ export const drawArtboard = (artboard, name = "") => {
   // draw elements
   const page = doc.pages[0]
 
+  let logoRight = 0
+  let slogan
+  let dataLogoRight = 0
+  let dataSloganLeft = 0
+  let sloganTop = 0
+
   for (var i = 0; i < artboard.children.length; i++) {
     let node = artboard.children[i]
     // let node = textnodetest
@@ -52,13 +58,25 @@ export const drawArtboard = (artboard, name = "") => {
         for (var j = 0; j < node.children.length; j++) {
           var child = node.children[j]
           if (child.name === "logo") {
-            createSvg(child, docXInPoints, docYInPoints, true)
+            const result = createSvg(child, docXInPoints, docYInPoints, true)
+            dataLogoRight = result.dataLogoRight
+            logoRight = result.logoRight
           } else {
-            createSvg(child, docXInPoints, docYInPoints, false)
+            const res = createSvg(child, docXInPoints, docYInPoints, false)
+            dataSloganLeft = res.dataSloganLeft
+            slogan = res.slogan
+            sloganTop = res.top
           }
         }
       }
     }
+  }
+
+  if (logoRight > 0 && dataSloganLeft - dataLogoRight > 0) {
+    // move slogan to logoRight + (dataSloganLeft - dataLogoRight)
+    slogan.move([logoRight + (dataSloganLeft - dataLogoRight), sloganTop])
+  } else {
+    alert(dataSloganLeft - dataLogoRight)
   }
 
   if (name.match(/^Banner/)) {

@@ -28,15 +28,15 @@ export function createSvg(child, x, y, isLogo) {
         startY + heightInPoints,
         startX + widthInPoints,
     ]
-    
+
     // eslint-disable-next-line no-undef
     frame.fit(FitOptions.PROPORTIONALLY)
     frame.strokeWeight = 0
-    
+
     const contentBounds = frame.svgs[0].geometricBounds
     const contentWidth = contentBounds[3] - contentBounds[1]
-    const contentHeight = contentBounds[2] - contentBounds[0];
-    
+    const contentHeight = contentBounds[2] - contentBounds[0]
+
     frame.resize(
         // eslint-disable-next-line no-undef
         CoordinateSpaces.INNER_COORDINATES,
@@ -45,13 +45,24 @@ export function createSvg(child, x, y, isLogo) {
         // eslint-disable-next-line no-undef
         ResizeMethods.REPLACING_CURRENT_DIMENSIONS_WITH,
         [contentWidth, contentHeight]
-    );
+    )
 
     frame.fit(FitOptions.PROPORTIONALLY)
     // eslint-disable-next-line no-undef
     // frame.fit(FitOptions.FRAME_TO_CONTENT)
     frame.name = child.name
 
+    if (isLogo) {
+        // return the right side of the logo position
+        return {
+            dataLogoRight: widthInPoints + xInPoints, logoRight: frame.geometricBounds[3]
+        }
+    } else {
+        return {
+            dataSloganLeft: xInPoints, slogan: frame,
+            top: frame.geometricBounds[0]
+        }
+    }
 }
 
 function calcLeadingFix(textFrameOG, textOG, page) {
