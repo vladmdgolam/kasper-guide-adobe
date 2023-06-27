@@ -1,7 +1,7 @@
 /// <reference types="types-for-adobe/InDesign/2018"/>
 
 import { toPoints } from "./constants"
-import { createLineNodes, createSvg, createTextFrame } from "./helpers"
+import { setupBaselineGrid, createSvg, createTextFrame } from "./helpers"
 
 export const drawArtboard = (artboard, name = "") => {
   const { absoluteBoundingBox } = artboard
@@ -37,11 +37,13 @@ export const drawArtboard = (artboard, name = "") => {
     let docXInPoints = x * toPoints
     let docYInPoints = y * toPoints
 
-    if (node.name.match(/^\d{2}pt$/) && !name.match(/^Banner/)) {
-      createLineNodes(node, docXInPoints, docYInPoints, page)
+    // if (node.name.match(/^\d{2}pt$/) && !name.match(/^Banner/)) {
+    if (node.name.match(/^12pt$/) && !name.match(/^Banner/)) {
+      // createLineNodes(node, docXInPoints, docYInPoints, page)
+      setupBaselineGrid(node, doc, docYInPoints)
     } else if (node.type === "TEXT") {
 
-      createTextFrame(node, docXInPoints, docYInPoints, page)
+      createTextFrame(node, docXInPoints, docYInPoints, page, !name.match(/^Banner/))
 
     } else if (node.name.match(/^logo /)) {
       // go through all children of artboard
@@ -57,5 +59,11 @@ export const drawArtboard = (artboard, name = "") => {
         }
       }
     }
+  }
+
+  if (name.match(/^Banner/)) {
+    doc.gridPreferences.baselineGridShown = false
+  } else {
+    doc.gridPreferences.baselineGridShown = true
   }
 }

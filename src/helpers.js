@@ -28,14 +28,30 @@ export function createSvg(child, x, y, isLogo) {
         startY + heightInPoints,
         startX + widthInPoints,
     ]
+    
+    // eslint-disable-next-line no-undef
+    frame.fit(FitOptions.PROPORTIONALLY)
+    frame.strokeWeight = 0
+    
+    const contentBounds = frame.svgs[0].geometricBounds
+    const contentWidth = contentBounds[3] - contentBounds[1]
+    const contentHeight = contentBounds[2] - contentBounds[0];
+    
+    frame.resize(
+        // eslint-disable-next-line no-undef
+        CoordinateSpaces.INNER_COORDINATES,
+        // eslint-disable-next-line no-undef
+        AnchorPoint.LEFT_CENTER_ANCHOR,
+        // eslint-disable-next-line no-undef
+        ResizeMethods.REPLACING_CURRENT_DIMENSIONS_WITH,
+        [contentWidth, contentHeight]
+    );
 
+    frame.fit(FitOptions.PROPORTIONALLY)
     // eslint-disable-next-line no-undef
-    frame.fit(FitOptions.CONTENT_TO_FRAME)
-    // eslint-disable-next-line no-undef
-    frame.fit(FitOptions.FRAME_TO_CONTENT)
+    // frame.fit(FitOptions.FRAME_TO_CONTENT)
     frame.name = child.name
 
-    frame.strokeWeight = 0
 }
 
 function calcLeadingFix(textFrameOG, textOG, page) {
@@ -101,7 +117,7 @@ function setTextAlignment(textFrame, textAlignHorizontal) {
     }
 }
 
-export function createTextFrame(node, docXInPoints, docYInPoints, page) {
+export function createTextFrame(node, docXInPoints, docYInPoints, page, align) {
     let xInPoints = node.absoluteBoundingBox.x * toPoints
     let yInPoints = node.absoluteBoundingBox.y * toPoints
     let widthInPoints = node.absoluteBoundingBox.width * toPoints
@@ -148,7 +164,7 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
         leadingDiff = (leading - capHeight) / 2
         leadingDiff -= diffY
     }
-    if(node.style.textAlignVertical === "BOTTOM") {
+    if (node.style.textAlignVertical === "BOTTOM") {
         startY -= leadingDiff
     } else {
         startY += leadingDiff
@@ -164,7 +180,7 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
     textFrame.contents = textContents
 
     setTextAlignment(textFrame, node.style.textAlignHorizontal)
-    
+
     if (node.rotation && Math.abs(node.rotation) >= 0.01) {
         textFrame.geometricBounds = [
             startX,
@@ -209,6 +225,23 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page) {
 
 
     textFrame.name = node.name
+
+    if (align) {
+        const yTopBefore = textFrame.geometricBounds[0]
+        const yBottomBefore = textFrame.geometricBounds[2]
+
+        textFrame.texts[0].alignToBaseline = true
+
+        const yTopAfter = textFrame.geometricBounds[0]
+        const yBottomAfter = textFrame.geometricBounds[2]
+
+        const diffTop = yTopAfter - yTopBefore
+        const diffBottom = yBottomAfter - yBottomBefore
+
+        if (Math.abs(diffTop) > 4.5 || Math.abs(diffBottom) > 4.5) {
+            textFrame.move(undefined, [0, -9])
+        }
+    }
 }
 
 export function calcDiff(textFrame, lineHeightPx, node) {
@@ -317,4 +350,21 @@ export function createLineNodes(node, docXInPoints, docYInPoints, page) {
     } else {
         group.visible = false
     }
+}
+
+export function setupBaselineGrid(node, doc, y) {
+    // Calculate the baseline grid start position
+    const first = node.children[0]
+    const start = first.absoluteBoundingBox.y * toPoints - y
+
+    // Set the increment for the baseline grid
+    const increment = 12 * toPoints  // You can change this value as needed
+
+    // Access the baseline grid preferences
+    var gridPreferences = doc.gridPreferences
+
+    // Setup baseline grid
+    gridPreferences.baselineStart = start
+    gridPreferences.baselineDivision = increment
+    gridPreferences.baselineGridShown = true // To display the baseline grid
 }
