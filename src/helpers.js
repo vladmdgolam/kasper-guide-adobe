@@ -30,7 +30,7 @@ export function createSvg(child, x, y, isLogo) {
     ]
 
     // eslint-disable-next-line no-undef
-    frame.fit(FitOptions.PROPORTIONALLY)
+    frame.fit(FitOptions.FILL_PROPORTIONALLY)
     frame.strokeWeight = 0
 
     const contentBounds = frame.svgs[0].geometricBounds
