@@ -11,8 +11,28 @@ export const drawArtboard = (artboard, name = "") => {
   // Create a new document with specified page size
   let doc = app.activeDocument
 
+  const print = !name.match(/^Banner/)
+
   let widthInPoints = width
   let heightInPoints = height
+
+  if (print) {
+
+    const pointsToMillimeters = 0.352777778
+  
+    // Conversion factor from millimeters to points
+    const millimetersToPoints = 1 / pointsToMillimeters
+  
+    // Convert x and y from points to millimeters and round to the nearest integer
+    let x_mm = Math.round(widthInPoints * pointsToMillimeters)
+    let y_mm = Math.round(heightInPoints * pointsToMillimeters)
+  
+    // Convert the rounded millimeter values back to points
+    let widthInPoints = x_mm * millimetersToPoints
+    let heightInPoints = y_mm * millimetersToPoints
+  }
+
+  // Conversion factor from points to millimeters
 
   // eslint-disable-next-line no-undef
   doc.viewPreferences.horizontalMeasurementUnits = MeasurementUnits.points
