@@ -63,7 +63,7 @@ export function closestFraction(aspect) {
   return [closest[1]]
 }
 
-export const toPoints = 0.75
+export const toPoints = 1
 
 export const textAlignMap = {
   "LEFT": {

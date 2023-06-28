@@ -11,8 +11,8 @@ export const drawArtboard = (artboard, name = "") => {
   // Create a new document with specified page size
   let doc = app.activeDocument
 
-  let widthInPoints = width / 1.3333
-  let heightInPoints = height / 1.3333
+  let widthInPoints = width
+  let heightInPoints = height
 
   // eslint-disable-next-line no-undef
   doc.viewPreferences.horizontalMeasurementUnits = MeasurementUnits.points
@@ -46,7 +46,7 @@ export const drawArtboard = (artboard, name = "") => {
     // if (node.name.match(/^\d{2}pt$/) && !name.match(/^Banner/)) {
     if (node.name.match(/^12pt$/) && !name.match(/^Banner/)) {
       // createLineNodes(node, docXInPoints, docYInPoints, page)
-      setupBaselineGrid(node, doc, docYInPoints)
+      setupBaselineGrid(node, doc, docYInPoints, docXInPoints, page)
     } else if (node.type === "TEXT") {
 
       createTextFrame(node, docXInPoints, docYInPoints, page, !name.match(/^Banner/))

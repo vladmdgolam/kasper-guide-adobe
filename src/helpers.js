@@ -47,10 +47,12 @@ export function createSvg(child, x, y, isLogo) {
         [contentWidth, contentHeight]
     )
 
-    frame.fit(FitOptions.PROPORTIONALLY)
     // eslint-disable-next-line no-undef
-    // frame.fit(FitOptions.FRAME_TO_CONTENT)
+    frame.fit(FitOptions.PROPORTIONALLY)
     frame.name = child.name
+
+    frame.strokeWeight = 0
+    frame.strokeColor = "None"
 
     if (isLogo) {
         // return the right side of the logo position
@@ -249,8 +251,10 @@ export function createTextFrame(node, docXInPoints, docYInPoints, page, align) {
         const diffTop = yTopAfter - yTopBefore
         const diffBottom = yBottomAfter - yBottomBefore
 
-        if (Math.abs(diffTop) > 4.5 || Math.abs(diffBottom) > 4.5) {
-            textFrame.move(undefined, [0, -9])
+        const full = 12 * toPoints
+
+        if (Math.abs(diffTop) > full / 2 || Math.abs(diffBottom) > full / 2) {
+            textFrame.move(undefined, [0, -full])
         }
     }
 }
@@ -363,13 +367,33 @@ export function createLineNodes(node, docXInPoints, docYInPoints, page) {
     }
 }
 
-export function setupBaselineGrid(node, doc, y) {
+export function setupBaselineGrid(node, doc, y, x, page) {
+    // Set the increment for the baseline grid
+    const increment = 12 * toPoints  // You can change this value as needed
+
     // Calculate the baseline grid start position
     const first = node.children[0]
     const start = first.absoluteBoundingBox.y * toPoints - y
+    const startX = first.absoluteBoundingBox.x * toPoints - x
 
-    // Set the increment for the baseline grid
-    const increment = 12 * toPoints  // You can change this value as needed
+    // find page height
+    const pageHeight = page.bounds[2] - page.bounds[0]
+
+    // Calculate the total available height for the baseline grid
+    const availableHeight = pageHeight - start * 2
+
+    // Calculate the number of grid lines that can fit in the available height
+    const numLines = Math.round(availableHeight / increment)
+
+    // Calculate the end position
+    const end = pageHeight - (start + numLines * increment)
+
+    page.marginPreferences.properties = {
+        top: start,
+        bottom: end,
+        left: startX,
+        right: startX
+    }
 
     // Access the baseline grid preferences
     var gridPreferences = doc.gridPreferences
